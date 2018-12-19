@@ -1,0 +1,31 @@
+{
+    "variables" : {
+        "region" : "us-west-2",
+        "source_ami" : "ami-01e24be29428c15b2"
+    },
+    "builders" : [
+        {
+            "type" : "amazon-ebs",
+            "profile" : "default",
+            "region" : "{{user `region`}}",
+            "instance_type" : "t2.micro",
+            "source_ami" : "{{user `source_ami`}}",
+            "ssh_username" : "ec2-user",
+            "ami_name" : "packer-builder",
+            "ami_description" : "Amazon Linux Image with Packer and associated Role-based permissions",
+            "run_tags" : {
+                "Name" : "packer-builder"
+            },
+            "tags" : {
+                "Tool" : "Packer"
+            }
+        }
+    ],
+    "provisioners" : [
+        {
+            "type" : "shell",
+            "script" : "./setup.sh",
+            "execute_command" : "sudo -E -S sh '{{ .Path }}'"
+        }
+    ]
+}
